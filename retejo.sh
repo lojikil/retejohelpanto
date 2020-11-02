@@ -13,7 +13,7 @@ echo '      <ul>'
 for i in `find . -type d -depth 1`
 do
     i=`echo $i | sed -e 's/\.\///'`
-    if [ "$i" = "./.git" ]; then
+    if [ "$i" = ".git" ]; then
         continue
     elif [ "$i" = "$base" ]; then
 
