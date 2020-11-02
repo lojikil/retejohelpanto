@@ -14,6 +14,10 @@ do
     if [ "$i" = "./.git" ]; then
         continue
     elif [ "$i" = "$base" ]; then
+
+        # TODO (lojikil) currently only matches on depth
+        # we need to check prefixes...
+
         echo '    <li> <a href="'$i'">&rsaquo; ' $i '</a></li>'
         echo '    <li>'
         echo '      <ul>'
