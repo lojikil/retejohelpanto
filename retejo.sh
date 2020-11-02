@@ -42,7 +42,22 @@ echo
 echo
 echo '  <div id="main-copy">'
 
-pandoc -f markdown -t html $base/index.txt
+if [ -f "$base/index.txt" ]
+then
+    pandoc -f markdown -t html $base/index.txt
+else
+    # should probably support doing this regardless, so that you
+    # can have an index.txt as well as a directory content dump
+    # additionally, can be used for Gopher/Gemini as well...
+    # lastly, should support symlinking index.txt to README.md
+    echo '<h1>Directory Contents</h1>'
+    echo '<ul>'
+    for g in `find $base -depth 1`
+    do
+        echo '<li><a href="/'$g'">'$g'</a></li>'
+    done
+    echo '</ul>'
+fi
 
 echo '  </div>'
 
