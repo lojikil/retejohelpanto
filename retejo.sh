@@ -1,8 +1,40 @@
-set -e
-base=$1
+#!/bin/sh
+#@(#) a simple static website generator, written in plain POSIX shell
+#@(#) probably needs some love to add some functions and such, but generally
+#@(#) relatively simple and easy to use.
+#@(#) [EO] simpla statika retejo generato, skribita en simpla POSIX-sxelo.
+#@(#) probable bezonas amon por aldoni funkciojn, sed gxenerale simpla kaj
+#@(#) facile uzebla
+
+set -euf
+# probably could set a `-o pipefail` as well, but thats
+# bash-only
+
+arg=$1
+base=' '
+target=' '
+
+# grab a base and a target here; we could also note if
+# we even *have* a target or if we also want to generate
+# a directory listing...
+
+if [ -d "$arg" ]
+then
+    base=$arg
+    if [ -f "$base/index.txt" ]
+    then
+        target="$base/index.txt"
+    elif [ -f "$base/README.md" ]
+    then
+        target="$base/README.md"
+    fi
+elif [ -f "$arg" ]
+then
+    target=$arg
+    base=`dirname $arg`
+fi
 
 # generate the header
-
 cat header.html
 
 # generate the side bar
@@ -42,9 +74,9 @@ echo
 echo
 echo '  <div id="main-copy">'
 
-if [ -f "$base/index.txt" ]
+if [ -f "$target" ]
 then
-    pandoc -f markdown -t html $base/index.txt
+    pandoc -f markdown -t html $target
 else
     # should probably support doing this regardless, so that you
     # can have an index.txt as well as a directory content dump
