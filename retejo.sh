@@ -13,6 +13,7 @@ set -euf
 arg=$1
 base=' '
 target=' '
+type=md
 
 # grab a base and a target here; we could also note if
 # we even *have* a target or if we also want to generate
@@ -27,11 +28,18 @@ then
     elif [ -f "$base/README.md" ]
     then
         target="$base/README.md"
+    elif [ -f "$base/README.adoc" ]
+    then
+        target="$base/README.adoc"
+        type=adoc
     fi
 elif [ -f "$arg" ]
 then
     target=$arg
     base=`dirname $arg`
+    if [ "${target#*.}" = "adoc" ]; then
+        type=adoc
+    fi
 fi
 
 # generate the header
@@ -76,7 +84,12 @@ echo '  <div id="main-copy">'
 
 if [ -f "$target" ]
 then
-    pandoc -f markdown -t html $target
+    if [ "$type" = "adoc" ]
+    then
+        asciidoctor -b docbook $target -o - | pandoc -f docbook -t html
+    else
+        pandoc -f markdown -t html $target
+    fi
 else
     # should probably support doing this regardless, so that you
     # can have an index.txt as well as a directory content dump
